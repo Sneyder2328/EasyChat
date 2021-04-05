@@ -6,12 +6,14 @@ import knex from "./database/knex";
 import { Model } from 'objection';
 Model.knex(knex);
 
+const port = process.env.PORT || 3035;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   //MIDDLEWARES
   //app.use(compression());
   app.useGlobalFilters(new HttpExceptionFilter())
   //SERVER
-  await app.listen(3035);
+  await app.listen(port);
 }
 bootstrap();
