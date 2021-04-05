@@ -6,9 +6,6 @@ switch (env) {
     case "development":
         require('dotenv').config();
         break;
-    case "production":
-        require('dotenv').config({ path: path.resolve(__dirname, "..", "..", ".env.prod") })
-        break;
     case "test":
         require('dotenv').config({ path: path.resolve(__dirname, "..", "..", ".env.test") })
         break;
