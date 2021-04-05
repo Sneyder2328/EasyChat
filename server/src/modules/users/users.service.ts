@@ -27,6 +27,10 @@ export class UsersService {
             if (userData[key]) toUpdate[key] = userData[key];
         })
         const userUpdated = await User.query().patchAndFetchById(userData.id, toUpdate);
-        return { profile: _.pick(userUpdated, ["id", "username", "fullname", "email"]) }
+        return { profile: _.pick(userUpdated, ["id", "username", "fullname", "email", "bio", "photoURL"]) }
+    }
+
+    async getUsers({ query, isGlobal }: { query: string, isGlobal: boolean }) {
+
     }
 }

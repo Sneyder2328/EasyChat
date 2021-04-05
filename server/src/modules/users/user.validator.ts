@@ -19,5 +19,23 @@ export class CreateUserDTO {
 }
 
 export class UpdateUserDTO {
+    @IsNotEmpty()
+    username: string;
 
+    @IsNotEmpty()
+    fullname: string;
+
+    @IsNotEmpty()
+    profilePhoto: string;
+
+    @IsNotEmpty()
+    bio: string;
+}
+
+export class GetUsersDTO {
+    @IsNotEmpty()
+    query: string;
+
+    @IsNotEmpty()
+    isGlobal: boolean;
 }

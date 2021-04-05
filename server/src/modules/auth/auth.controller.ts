@@ -10,7 +10,7 @@ export class AuthController {
 
     @Post()
     async login(
-        @Headers('Authorization') authorization: string,
+        @Headers(config.headers.accessToken) authorization: string,
         @Response() res: Res,
         @Request() req
     ) {
