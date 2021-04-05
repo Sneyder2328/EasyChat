@@ -29,10 +29,12 @@ export class UsersController {
     @UseGuards(Authenticator)
     async getUsers(
         @Query('query') query: string,
-        @Query('includeGroups') includeGroups: string
+        @Query('includeGroups') includeGroupsString: string,
+        @Query('limit') limit: number,
+        @Request() req
     ) {
-        const isGlobal = includeGroups === "true";
-        console.log(query, isGlobal);
-        return 'works';
+        const includeGroups = includeGroupsString === "true";
+        const { data } = await this.usersService.getUsers({ query, includeGroups, limit }, req.userId);
+        return { ...data };
     }
 }

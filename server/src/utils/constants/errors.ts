@@ -3,6 +3,7 @@ export const errors = {
     NOT_FOUND: 'Not found',
     EMAIL: 'email',
     USER: 'user',
+    GROUP: 'group',
     ENTERPRISE: 'enterprise',
     DEFAULT_ERROR: 'Error',
     RECORD_DUPLICATED_ERROR: 'Record duplicated error',
@@ -29,5 +30,6 @@ export const errors = {
         EMAIL_TAKEN: "Email already exists",
         ENTERPRISE_TAKEN: "Enterprise already exists",
         INCORRECT_CREDENTIALS: "Incorrect credentials",
+        NAME_TAKEN: "Name already taken"
     }
 };
