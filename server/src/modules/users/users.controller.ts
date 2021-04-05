@@ -10,7 +10,7 @@ export class UsersController {
     async createUser(
         @Body(new ValidationPipe()) createUserDTO: CreateUserDTO
     ) {
-        const { username, email, password, fullname, userId: id } = createUserDTO;
+        const { username, email, password, fullname, id } = createUserDTO;
         const { profile } = await this.usersService.insertUsers({ username, email, password, fullname, id });
         return { ...profile };
     }

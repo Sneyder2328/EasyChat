@@ -12,6 +12,6 @@ async function bootstrap() {
   //app.use(compression());
   app.useGlobalFilters(new HttpExceptionFilter())
   //SERVER
-  await app.listen(3000);
+  await app.listen(3035);
 }
 bootstrap();

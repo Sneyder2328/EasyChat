@@ -37,3 +37,4 @@ lerna-debug.log*
 .env
 #testing
 requests.http
+info.md

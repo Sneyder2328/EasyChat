@@ -6,7 +6,7 @@ export class CreateUserDTO {
 
     @IsUUID()
     @IsNotEmpty()
-    userId: string;
+    id: string;
 
     @IsNotEmpty()
     password: string;

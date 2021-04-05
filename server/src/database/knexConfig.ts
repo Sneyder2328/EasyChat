@@ -5,16 +5,6 @@ export const knexConfig = {
         client: "mysql",
         connection: config.connection,
         debug: true,
-        log: {
-            warn(message) {
-            },
-            error(message) {
-            },
-            deprecate(message) {
-            },
-            debug(message) {
-            },
-        }
     },
     production: {
         client: "mysql",
