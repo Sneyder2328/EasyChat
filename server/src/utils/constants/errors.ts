@@ -1,0 +1,33 @@
+export const errors = {
+    BAD_REQUEST: 'Bad request',
+    NOT_FOUND: 'Not found',
+    EMAIL: 'email',
+    USER: 'user',
+    ENTERPRISE: 'enterprise',
+    DEFAULT_ERROR: 'Error',
+    RECORD_DUPLICATED_ERROR: 'Record duplicated error',
+    PASSWORD: 'password',
+    USER_NOT_FOUND_ERROR: 'User',
+    AUTH_ERROR: "Session is invalid",
+    FORBIDDEN: "Forbidden",
+    UNAUTHORIZED: "Unauthorized",
+    CREDENTIAL: "Credential",
+
+    message: {
+        BAD_REQUEST: 'Bad request',
+        USER_NOT_ACTIVATED: 'User is not activated, plase activate it',
+        RECORD_DUPLICATED: 'The record you are trying to create already exists in the database',
+        PERMISSION_NOT_GRANTED: "You do not have permissions to access this route",
+        USER_NOT_FOUND: "User not found",
+        SESSION_NOT_FOUND: "Session not found",
+        TOKEN_NOT_FOUND: "Token not found",
+        ACCESS_TOKEN_EXPIRED: "Access token expired",
+        ACCESS_TOKEN_INVALID: "Access token not valid",
+        DEFAULT_ERROR: "Something went wrong. Please try again.",
+        UNDEFINED_ROUTE: "Route not found on the server",
+        USERNAME_TAKEN: "Username already exists",
+        EMAIL_TAKEN: "Email already exists",
+        ENTERPRISE_TAKEN: "Enterprise already exists",
+        INCORRECT_CREDENTIALS: "Incorrect credentials",
+    }
+};
