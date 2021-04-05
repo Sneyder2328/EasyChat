@@ -7,83 +7,93 @@
  */
 
 import React from 'react';
-import type {Node} from 'react';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
-  useColorScheme,
   View,
 } from 'react-native';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { HomeScreen } from './src/screens/home/HomeScreen';
+import { colorScheme } from './src/utils/colorScheme';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { WelcomeScreen } from './src/screens/welcome/WelcomeScreen';
+import { SplashScreen } from './src/screens/splash/SplashScreen';
+import { SignUpScreen } from './src/screens/signUp/SignUpScreen';
+import { LogInScreen } from './src/screens/logIn/LogInScreen';
+import { CreateGroupScreen } from './src/screens/CreateGroup.tsx/CreateGroupScreen';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const Stack = createStackNavigator();
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+export const AppScreens = {
+  LOG_IN: "LogIn",
+  SIGN_UP: "SignUp",
+  SPLASH: "Splash",
+  HOME: "Home",
+  WELCOME: "Welcome",
+  CREATE_GROUP: "CreateGroup",
+}
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: colorScheme.primary,
+    accent: colorScheme.accent,
+    surface: colorScheme.primary,
+    text: colorScheme.textOnPrimary,
+  }
+}
+const App = () => {
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+    <PaperProvider theme={theme}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName={AppScreens.HOME}>
+          <Stack.Screen
+            name={AppScreens.SPLASH}
+            component={SplashScreen}
+            options={{ header: () => null }}
+          />
+          <Stack.Screen
+            name={AppScreens.HOME}
+            component={HomeScreen}
+            options={{ header: () => null }}
+          />
+          <Stack.Screen
+            name={AppScreens.WELCOME}
+            component={WelcomeScreen}
+            options={{ header: () => null }}
+          />
+          <Stack.Screen
+            name={AppScreens.SIGN_UP}
+            component={SignUpScreen}
+            options={{ header: () => null }}
+          />
+          <Stack.Screen
+            name={AppScreens.LOG_IN}
+            component={LogInScreen}
+            options={{ header: () => null }}
+          />
+          <Stack.Screen
+            name={AppScreens.CREATE_GROUP}
+            component={CreateGroupScreen}
+            options={{ header: () => null }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
+  )
+
+  return (
+    <SafeAreaView style={styles.backgroundStyle}>
+      <StatusBar barStyle={'light-content'} />
       <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+        contentInsetAdjustmentBehavior="automatic">
+        <View>
+          <HomeScreen />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -91,6 +101,10 @@ const App: () => Node = () => {
 };
 
 const styles = StyleSheet.create({
+  backgroundStyle: {
+    flex: 1,
+    backgroundColor: colorScheme.primary,
+  },
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
