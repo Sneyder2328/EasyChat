@@ -1,5 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
 import { errors } from '../constants/errors';
+import { httpCodes } from '../constants/httpResponseCodes';
 
 type exceptionType = {
     statusCode: string,
@@ -15,15 +16,23 @@ export class HttpExceptionFilter implements ExceptionFilter {
         let error = exception.name;
         let response = exception.getResponse();
         const status = exception.getStatus();
+        let jsonResponse: {} = {
+            statusCode: status,
+            error,
+            message: response
+        };
         if (status == 400) {
-            response["message"] = response['message'].map()
+            response = response['message'].map(msg => {
+                const key = msg.split(" ")[0];
+                return { [key]: msg };
+            })
+            jsonResponse = {
+                statusCode: httpCodes.UNPROCESSABLE_ENTITY,
+                errors: response
+            }
         }
         res
             .status(status)
-            .json({
-                statusCode: status,
-                error,
-                message: response
-            })
+            .json(jsonResponse)
     }
 }
