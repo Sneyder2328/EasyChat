@@ -27,6 +27,11 @@ export class AuthService {
         }
     }
 
+    async logout(token: string) {
+        const deleted = await Session.query().deleteById(token);
+        return { deleted };
+    }
+
     //UTILS
     public async findUserById(userId: string): Promise<UserObject> {
         return await User.query().findById(userId).where(raw('deletedAt IS NULL'));

@@ -1,9 +1,10 @@
-import { Controller, Headers, Post, Response, Request } from '@nestjs/common';
+import { Controller, Headers, Post, Response, Request, Delete, UseGuards } from '@nestjs/common';
 import { ForbiddenError } from 'src/utils/errors/ForbiddenError';
 import { Response as Res } from 'express'
 import { config } from '../../config/config';
 import { AuthService } from "./auth.service";
 import { errors } from 'src/utils/constants/errors';
+import { Authenticator } from 'src/middlewares/authenticate';
 @Controller('sessions')
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
@@ -21,5 +22,14 @@ export class AuthController {
         const password = userData[1];
         const { profile, session } = await this.authService.login(username, password);
         res.set({ [config.headers.accessToken]: session }).json({ ...profile });
+    }
+
+    @Delete()
+    @UseGuards(Authenticator)
+    async logout(
+        @Headers(config.headers.accessToken) accessToken: string
+    ) {
+        const { deleted } = await this.authService.logout(accessToken.split(" ")[1]);
+        return { deleted };
     }
 }
