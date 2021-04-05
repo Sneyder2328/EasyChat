@@ -2,6 +2,7 @@
 export const colorScheme = {
     primary: "#213C5D",
     primaryDark: "#1E3147",
+    primaryDark2: "#142436",
 
     accent: "#12B7BD",
     accentDisabled: "#91E7EA",

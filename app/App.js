@@ -50,6 +50,7 @@ const App = () => {
 
   return (
     <PaperProvider theme={theme}>
+      <StatusBar barStyle={'light-content'} backgroundColor={colorScheme.primaryDark2} />
       <NavigationContainer>
         <Stack.Navigator initialRouteName={AppScreens.HOME}>
           <Stack.Screen
