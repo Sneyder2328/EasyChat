@@ -1,7 +1,7 @@
-import { Body, Controller, Post, Put, Request, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Request, UseGuards, ValidationPipe } from '@nestjs/common';
 import { Authenticator } from 'src/middlewares/authenticate';
 import { UsersService } from './users.service';
-import { CreateUserDTO } from "./user.validator";
+import { CreateUserDTO, GetUsersDTO, UpdateUserDTO } from "./user.validator";
 @Controller('users')
 export class UsersController {
     constructor(private readonly usersService: UsersService) { }
@@ -18,13 +18,21 @@ export class UsersController {
     @Put()
     @UseGuards(Authenticator)
     async updateUser(
-        @Body('username') username: string,
-        @Body('fullname') fullname: string,
-        @Body('bio') bio: string,
-        @Body('profilePhoto') photoURL: string,
+        @Body(new ValidationPipe()) { username, bio, fullname, profilePhoto: photoURL }: UpdateUserDTO,
         @Request() req
     ) {
         const { profile } = await this.usersService.updateUsers({ username, bio, fullname, id: req.userId, photoURL });
         return { ...profile }
+    }
+
+    @Get()
+    @UseGuards(Authenticator)
+    async getUsers(
+        @Query('query') query: string,
+        @Query('includeGroups') includeGroups: string
+    ) {
+        const isGlobal = includeGroups === "true";
+        console.log(query, isGlobal);
+        return 'works';
     }
 }
