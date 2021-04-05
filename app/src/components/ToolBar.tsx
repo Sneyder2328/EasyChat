@@ -1,5 +1,5 @@
 import React from "react"
-import { Image, ImageSourcePropType, StyleSheet, Text, View } from "react-native"
+import { Image, ImageSourcePropType, Platform, StyleSheet, Text, View } from "react-native"
 import { Appbar } from 'react-native-paper';
 import { colorScheme } from "../utils/colorScheme"
 
@@ -22,11 +22,13 @@ export const Toolbar: React.FC<Props> = ({ title, icon, onBackPressed, children 
         </View>
     </View>)
 }
+const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
+
 const styles = StyleSheet.create({
     container: {
         backgroundColor: colorScheme.primaryDark,
         flexDirection: "row",
-        height: 54,
+        height: APPBAR_HEIGHT,
         alignItems: "center",
         justifyContent: "space-between"
     },
