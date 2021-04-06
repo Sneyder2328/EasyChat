@@ -7,6 +7,8 @@ import { UserNotFoundError } from 'src/utils/errors/UserNotFoundError';
 import { Chat } from 'src/database/models/Chat';
 import { raw } from 'objection';
 import { Group } from 'src/database/models/Group';
+import { genUUID } from 'src/utils/utils';
+import { Session } from 'src/database/models/Session';
 
 type updateUsersType = { id: string, username: string, fullname: string, photoURL: string, bio: string }
 @Injectable()
@@ -16,9 +18,14 @@ export class UsersService {
         if (userByUsername) throw new ConflictError({ error: errors.USER, msg: errors.message.USERNAME_TAKEN });
         const userByEmail = await User.query().findOne('email', email);
         if (userByEmail) throw new ConflictError({ error: errors.USER, msg: errors.message.EMAIL_TAKEN });
+        const session = genUUID();
+        await Session.query().insert({ token: session, userId: id });
 
         const user = await User.query().insert({ id, email, username, password, fullname });
-        return { profile: _.pick(user, ['id', 'username', 'fullname', 'email']) }
+        return {
+            profile: _.pick(user, ['id', 'username', 'fullname', 'email']),
+            session
+        }
     }
 
     async updateUsers(userData: updateUsersType) {
