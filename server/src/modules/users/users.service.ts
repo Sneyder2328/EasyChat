@@ -71,9 +71,7 @@ export class UsersService {
 
         if (limitCounter > 0) { //GLOBAL SEARCHS
             const globalUsers = await User.query().select("username", "photoURL", "User.id", "fullname")
-                .join(raw('UserChat ON UserChat.userId = User.id'))
                 .whereNotIn("id", knownUsersId)
-                .andWhere(raw('UserChat.chatId NOT IN ' + subQuery))
                 .andWhere(raw('User.username LIKE "%' + query + '%"'))
                 .limit(limitCounter).distinct();
             limitCounter -= globalUsers.length;
