@@ -59,7 +59,7 @@ export const authSlice = createSlice({
 const persistConfig = {
     key: authSlice.name,
     storage: AsyncStorage,
-    blacklist: ['sesionState', 'logInError', 'signUpError', 'updateProfileError', 'isUpdatingProfile']
+    blacklist: ['status', 'error', 'isUpdatingProfile']
 };
 export const authReducer = persistReducer(persistConfig, authSlice.reducer)
 export const {

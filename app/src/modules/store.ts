@@ -5,7 +5,8 @@ import thunk from 'redux-thunk';
 import {Action, ThunkAction} from "@reduxjs/toolkit";
 import { RootState, rootReducer } from "./rootReducer";
 
-export const store = createStore(rootReducer, applyMiddleware(createLogger(), thunk));
+export const store = createStore(rootReducer, applyMiddleware(thunk));
+// export const store = createStore(rootReducer, applyMiddleware(createLogger(), thunk));
 
 export const persistor = persistStore(store);
 

@@ -10,10 +10,10 @@ export const logInUser = (user: LogInRequest): AppThunk => async (dispatch) => {
         const response = await AuthApi.logIn(user);
         processSignInResponse({ dispatch, response })
     } catch (err) {
-        console.log("logInError:", err);
+        console.log("logInUser err:", err);
         const error = err?.response?.data?.error || 'Network connection error'
         const message = err?.response?.data?.message || 'Network connection error'
-        dispatch(signUpError({ error: { fieldName: error, message } }))
+        dispatch(logInError({ error: { fieldName: error, message } }))
     }
 };
 
@@ -24,7 +24,7 @@ export const signUpUser = (userData: SignUpRequest): AppThunk => async (dispatch
         const response = await AuthApi.signUp(userData);
         processSignInResponse({ dispatch, response })
     } catch (err) {
-        console.log("error:", err);
+        console.log("signUpUser error:", err);
         const error = err?.response?.data?.error || 'Network connection error'
         const message = err?.response?.data?.message || 'Network connection error'
         dispatch(signUpError({ error: { fieldName: error, message } }))
@@ -33,6 +33,7 @@ export const signUpUser = (userData: SignUpRequest): AppThunk => async (dispatch
 
 
 const processSignInResponse = ({ dispatch, response }: { dispatch: any, response: AxiosResponse<UserResponse> }) => {
+    console.log("processSignInResponse", response);
     const accessToken = response.headers['authorization'];
     console.log("accessToken", accessToken);
     dispatch(setUser({ user: response.data }))

@@ -31,7 +31,10 @@ export type UserResponse = {
 
 export const AuthApi = {
     async logIn({ username, password }: LogInRequest): Promise<AxiosResponse<UserResponse>> {
-        return await transport.post("/sessions/", { auth: { username, password } })
+        return await transport.post("/sessions/", {}, {
+            withCredentials: true,
+            auth: { username, password }
+        })
     },
     async signUp(user: SignUpRequest): Promise<AxiosResponse<UserResponse>> {
         return await transport.post("/users/", user)
