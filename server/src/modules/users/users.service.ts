@@ -4,6 +4,9 @@ import { UserType, User } from "../../database/models/User";
 import { ConflictError } from "../../utils/errors/ConflictError";
 import _ from 'lodash';
 import { UserNotFoundError } from 'src/utils/errors/UserNotFoundError';
+import { Chat } from 'src/database/models/Chat';
+import { raw } from 'objection';
+import { Group } from 'src/database/models/Group';
 
 type updateUsersType = { id: string, username: string, fullname: string, photoURL: string, bio: string }
 @Injectable()
@@ -30,7 +33,59 @@ export class UsersService {
         return { profile: _.pick(userUpdated, ["id", "username", "fullname", "email", "bio", "photoURL"]) }
     }
 
-    async getUsers({ query, isGlobal }: { query: string, isGlobal: boolean }) {
+    async getUsers({ query, includeGroups, limit }: { query: string, includeGroups: boolean, limit: number }, userId: string) {
+        let limitCounter = limit;
+        const subQuery = '(SELECT Chat.id from Chat '
+            + 'JOIN UserChat ON UserChat.chatId = Chat.id '
+            + 'WHERE UserChat.userId = "' + userId + '")';
+
+        const knownUsers = await User.query().select("username", "photoURL", "User.id", "fullname")
+            .join(raw('UserChat ON UserChat.userId = User.id'))
+            .where(raw('UserChat.chatId IN ' + subQuery))
+            .andWhere(raw('User.id != "' + userId + '"'))
+            .andWhere(raw('User.username LIKE "%' + query + '%"'))
+            .limit(limitCounter).distinct();
+        limitCounter -= knownUsers.length;
+        const knownUsersId = knownUsers.map(user => user.id);
+        let knownGroupsId = [];
+        let users = knownUsers.map(user => ({ ...user, isGlobal: false }));
+        let groups = [];
+
+        if (includeGroups && limitCounter > 0) {
+            const knownGroups = await Group.query().select("name", "id", "photoURL")
+                .join(raw('UserGroup ON UserGroup.groupId = id'))
+                .where(raw('UserGroup.userId = "' + userId + '"'))
+                .andWhere(raw('Group.name LIKE "%' + query + '%"'))
+                .limit(limitCounter).distinct();
+            limitCounter -= knownGroups.length;
+            knownGroupsId = knownUsers.map(group => group.id);
+            groups = knownGroups.map(group => ({ ...group, isGlobal: false }));
+        }
+
+        if (limitCounter > 0) { //GLOBAL SEARCHS
+            const globalUsers = await User.query().select("username", "photoURL", "User.id", "fullname")
+                .join(raw('UserChat ON UserChat.userId = User.id'))
+                .whereNotIn("id", knownUsersId)
+                .andWhere(raw('UserChat.chatId NOT IN ' + subQuery))
+                .andWhere(raw('User.username LIKE "%' + query + '%"'))
+                .limit(limitCounter).distinct();
+            limitCounter -= globalUsers.length;
+            users = users.concat(globalUsers.map(user => ({ ...user, isGlobal: true })));
+        }
+
+        if (includeGroups && limitCounter > 0) {
+            const globalGroups = await Group.query().select("name", "id", "photoURL")
+                .join(raw('UserGroup ON UserGroup.groupId = id'))
+                .whereNotIn("id", knownGroupsId)
+                .andWhere(raw('Group.name LIKE "%' + query + '%"'))
+                .limit(limitCounter).distinct();
+            limitCounter -= globalGroups.length;
+            groups = groups.concat(globalGroups.map(group => ({ ...group, isGlobal: true })));
+        }
+
+        return {
+            data: { users, groups }
+        }
 
     }
 }

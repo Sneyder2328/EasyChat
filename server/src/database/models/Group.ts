@@ -3,6 +3,7 @@ import { Model, ModelObject } from 'objection';
 export class Group extends Model {
     id!: string;
     name!: string;
+    bio!: string;
     photoURL!: string;
     createdAt!: Date;
 
@@ -13,6 +14,7 @@ export type GroupObject = ModelObject<Group>;
 export type GroupType = {
     id: string;
     name: string;
+    bio: string;
     photoURL: string;
     createdAt?: Date;
 }
