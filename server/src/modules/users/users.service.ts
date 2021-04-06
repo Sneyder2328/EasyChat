@@ -72,6 +72,7 @@ export class UsersService {
         if (limitCounter > 0) { //GLOBAL SEARCHS
             const globalUsers = await User.query().select("username", "photoURL", "User.id", "fullname")
                 .whereNotIn("id", knownUsersId)
+                .andWhere(raw('User.id != "' + userId + '"'))
                 .andWhere(raw('User.username LIKE "%' + query + '%"'))
                 .limit(limitCounter).distinct();
             limitCounter -= globalUsers.length;
