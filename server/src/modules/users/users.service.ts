@@ -18,10 +18,10 @@ export class UsersService {
         if (userByUsername) throw new ConflictError({ error: errors.USER, msg: errors.message.USERNAME_TAKEN });
         const userByEmail = await User.query().findOne('email', email);
         if (userByEmail) throw new ConflictError({ error: errors.USER, msg: errors.message.EMAIL_TAKEN });
+        const user = await User.query().insert({ id, email, username, password, fullname });
         const session = genUUID();
         await Session.query().insert({ token: session, userId: id });
 
-        const user = await User.query().insert({ id, email, username, password, fullname });
         return {
             profile: _.pick(user, ['id', 'username', 'fullname', 'email']),
             session
