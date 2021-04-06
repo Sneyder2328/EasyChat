@@ -9,13 +9,16 @@ import { Toolbar } from "../../components/ToolBar";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Appbar, Menu } from 'react-native-paper';
 import { Platform } from 'react-native';
-import { AppScreens } from "../../../App";
+import { AppScreens } from "../../AppNavigator";
+import { useDispatch } from "react-redux";
+import { logOutUser } from "../../modules/auth/authActions";
 
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
 const Tab = createMaterialTopTabNavigator();
 
-export const HomeScreen = ({navigation }) => {
+export const HomeScreen = ({ navigation }) => {
+    const dispatch = useDispatch()
     const [menuVisible, setMenuVisible] = useState(false)
     const handleSearch = () => {
         console.log("handleSearch");
@@ -27,6 +30,9 @@ export const HomeScreen = ({navigation }) => {
         closeMenu()
         navigation.navigate(AppScreens.CREATE_GROUP)
     }
+    const handleLogOut = () => {
+        dispatch(logOutUser())
+    }
 
     return (
         <View style={styles.wrapper}>
@@ -37,7 +43,7 @@ export const HomeScreen = ({navigation }) => {
                     onDismiss={closeMenu}
                     anchor={<Appbar.Action icon={MORE_ICON} color={colorScheme.textOnPrimary} onPress={openMenu} />}>
                     <Menu.Item onPress={handleNewGroup} title="New group" />
-                    <Menu.Item onPress={() => { }} title="Settings" />
+                    <Menu.Item onPress={handleLogOut} title="Log out" />
                 </Menu>
             </Toolbar>
             <Tab.Navigator

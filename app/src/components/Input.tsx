@@ -3,7 +3,7 @@ import { StyleProp, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } fr
 import { colorScheme } from "../utils/colorScheme"
 
 type Props = {
-    includeLabel?: boolean;
+    label?: string;
     placeholder: string;
     defaultValue?: string;
     containerStyle?: StyleProp<ViewStyle>;
@@ -12,11 +12,11 @@ type Props = {
 } & React.ComponentPropsWithRef<typeof TextInput>
 
 export const Input: React.FC<Props> =
-    ({ placeholder, includeLabel, defaultValue, containerStyle,
+    ({ placeholder, label, defaultValue, containerStyle,
         inputStyle, labelStyle, ...props }) => {
 
         return (<View style={[styles.container, containerStyle]}>
-            {includeLabel && <Text style={[styles.label, labelStyle]}>{placeholder}</Text>}
+            {label && <Text style={[styles.label, labelStyle]}>{label}</Text>}
             <TextInput style={[styles.input, inputStyle]} placeholderTextColor={colorScheme.textOnPrimaryDark2} placeholder={placeholder} {...props}>{defaultValue}</TextInput>
         </View>)
     }

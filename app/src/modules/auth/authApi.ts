@@ -1,35 +1,45 @@
+import { AxiosResponse } from "axios"
 import { transport } from "../../api"
 
-type SignUpRequest = {
+export type SignUpRequest = {
     id: string
     username: string;
     email: string;
     fullname: string;
 }
 
-type LogInRequest = {
+export type LogInRequest = {
     username: string;
     password: string;
 }
 
-type UserResponse = {
+export type UpdateUserRequest = {
+    username: string;
+    fullname: string;
+    photoUrl?: string;
+    bio?: string;
+}
+
+export type UserResponse = {
     id: string
     username: string;
     email: string;
     fullname: string;
-    photoURL?: string;
+    photoUrl?: string;
     bio?: string;
 }
 
 export const AuthApi = {
-    async logIn(user: LogInRequest): Promise<UserResponse> {
-        const configAxios = {
-            auth: { username: user.username, password: user.password },
-            withCredentials: true
-        }
-        return await transport.post("/sessions/", configAxios);
+    async logIn({ username, password }: LogInRequest): Promise<AxiosResponse<UserResponse>> {
+        return await transport.post("/sessions/", { auth: { username, password } })
     },
-    async signUp(user: SignUpRequest): Promise<UserResponse> {
+    async signUp(user: SignUpRequest): Promise<AxiosResponse<UserResponse>> {
         return await transport.post("/users/", user)
-    }
+    },
+    async updateUser(user: UpdateUserRequest): Promise<AxiosResponse<UserResponse>> {
+        return await transport.post("/users/", user)
+    },
+    async logOut(): Promise<AxiosResponse<boolean>> {
+        return await transport.delete('/sessions/')
+    },
 }

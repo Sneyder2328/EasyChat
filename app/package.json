@@ -20,6 +20,7 @@
     "date-fns": "^2.19.0",
     "normalizr": "^3.6.1",
     "react": "17.0.1",
+    "react-hook-form": "^7.0.2",
     "react-native": "0.64.0",
     "react-native-dialog": "^6.2.0",
     "react-native-elements": "^3.3.2",
