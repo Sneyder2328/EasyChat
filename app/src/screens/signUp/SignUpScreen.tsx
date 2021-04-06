@@ -6,14 +6,17 @@ import { Input } from "../../components/Input"
 import { colorScheme } from "../../utils/colorScheme"
 import icLauncher from "../../assets/ic_launcher.png"
 import { ScrollView } from "react-native-gesture-handler"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { signUpUser } from "../../modules/auth/authActions"
 import { genUUID } from "../../utils/utils"
+import { LoadingOverlay } from "../../components/LoadingOverlay"
+import { isSigningUpSelector } from "../../modules/selectors"
 
 type SignUpFormParams = { username: string, password: string, email: string, fullname: string };
 
 export const SignUpScreen = () => {
     const dispatch = useDispatch()
+    const isSigningUp = useSelector(isSigningUpSelector)
     const [username, setUsername] = useState<string>('')
     const [fullname, setFullname] = useState<string>('')
     const [email, setEmail] = useState<string>('')
@@ -30,30 +33,30 @@ export const SignUpScreen = () => {
 
     useEffect(() => {
         register("fullname", {
-            required: {value: true, message: 'Please enter your full name'},
-            minLength: {value: 2, message: 'This field needs to be at least 2 characters long'}
+            required: { value: true, message: 'Please enter your full name' },
+            minLength: { value: 2, message: 'This field needs to be at least 2 characters long' }
         })
         register('username', {
-            required: {value: true, message: 'Please enter a username'},
-            pattern: {value: /^\w+$/, message: 'Username must contain only alphanumeric values'},
-            minLength: {value: 2, message: 'Username must be at least 2 characters long'}
+            required: { value: true, message: 'Please enter a username' },
+            pattern: { value: /^\w+$/, message: 'Username must contain only alphanumeric values' },
+            minLength: { value: 2, message: 'Username must be at least 2 characters long' }
         })
         register('email', {
-            required: {value: true, message: 'Please enter your email address'},
+            required: { value: true, message: 'Please enter your email address' },
             pattern: {
                 value: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
                 message: 'Please provide a properly formatted email address'
             }
         })
         register('password', {
-            required: {value: true, message: 'Please enter your password'},
-            minLength: {value: 8, message: 'Your password needs to be at least 8 characters long'}
+            required: { value: true, message: 'Please enter your password' },
+            minLength: { value: 8, message: 'Your password needs to be at least 8 characters long' }
         })
     }, [register])
 
     const onValidData = (data: SignUpFormParams) => {
         console.log('onValidData', data);
-        dispatch(signUpUser({...data, id: genUUID()}))
+        dispatch(signUpUser({ ...data, id: genUUID() }))
     }
     const onInvalidData = (errors: FieldErrors) => {
         console.log('onInvalidData', errors);
@@ -62,9 +65,9 @@ export const SignUpScreen = () => {
 
     return (
         <ScrollView
-            style={styles.container}
+            style={styles.wrapper}
             contentInsetAdjustmentBehavior="automatic">
-            <View>
+            <View style={styles.container}>
                 <Image source={icLauncher} style={styles.image} />
                 <Input
                     placeholder="Username"
@@ -105,14 +108,18 @@ export const SignUpScreen = () => {
                     onPress={handleSubmit(onValidData, onInvalidData)}
                     style={styles.button} />
             </View>
+            <LoadingOverlay visible={isSigningUp} />
         </ScrollView>
     )
 }
 const styles = StyleSheet.create({
-    container: {
+    wrapper: {
         flex: 1,
         backgroundColor: colorScheme.primary,
+    },
+    container: {
         padding: 16,
+        flex: 1,
     },
     image: {
         alignSelf: "center",

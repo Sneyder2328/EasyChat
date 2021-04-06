@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Image, StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { colorScheme } from "../../utils/colorScheme"
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { ChatsScreen } from "../chats/ChatsScreen";
@@ -10,14 +10,17 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Appbar, Menu } from 'react-native-paper';
 import { Platform } from 'react-native';
 import { AppScreens } from "../../AppNavigator";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logOutUser } from "../../modules/auth/authActions";
+import { LoadingOverlay } from "../../components/LoadingOverlay";
+import { isLogingOutSelector } from "../../modules/selectors";
 
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
 const Tab = createMaterialTopTabNavigator();
 
 export const HomeScreen = ({ navigation }) => {
+    const isLogingOut = useSelector(isLogingOutSelector)
     const dispatch = useDispatch()
     const [menuVisible, setMenuVisible] = useState(false)
     const handleSearch = () => {
@@ -84,6 +87,7 @@ export const HomeScreen = ({ navigation }) => {
                         tabBarIcon: ({ color }: { color: string }) => <Icon name="user" size={25} color={color} />,
                     }} />
             </Tab.Navigator>
+            <LoadingOverlay visible={isLogingOut} />
         </View>
     )
 }
@@ -92,5 +96,4 @@ const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
     },
-
 })
