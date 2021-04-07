@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { raw } from 'objection';
 import { errors } from 'src/utils/constants/errors';
 import { ConflictError } from 'src/utils/errors/ConflictError';
+import { NotFoundError } from 'src/utils/errors/NotFoundError';
 import { Group } from "../../database/models/Group";
 import { MessageGroup } from "../../database/models/MessageGroup";
 import { UserGroup } from "../../database/models/UserGroup";
@@ -33,6 +34,21 @@ export class GroupsService {
         })
         const groupsWithMessage = await Promise.all(groupsMap);
         return { data: groupsWithMessage };
+    }
+
+    async getGroupsIds(userId: string) {
+        const groupsIds = await Group.query().select("Group.id")
+            .join(raw("UserGroup ON groupId = id"))
+            .where(raw('userId = "' + userId + '"'));
+        return groupsIds.map(groupId => groupId.id);
+    }
+
+    async sendMessage({ id, groupId, userId, content }) {
+        const group = await Group.query().findById(groupId);
+        if (!group) throw new NotFoundError(errors.GROUP, errors.message.GROUP_NOT_FOUND);
+
+        const message = await MessageGroup.query().insert({ id, recipientId: groupId, senderId: userId, content })
+        return message;
     }
 
     async createGroups({ id, name, members, photoURL, bio }: createGroupsType, userId: string) {

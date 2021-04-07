@@ -22,6 +22,7 @@ export const errors = {
         USER_NOT_FOUND: "User not found",
         SESSION_NOT_FOUND: "Session not found",
         TOKEN_NOT_FOUND: "Token not found",
+        GROUP_NOT_FOUND: "Group not found",
         ACCESS_TOKEN_EXPIRED: "Access token expired",
         ACCESS_TOKEN_INVALID: "Access token not valid",
         DEFAULT_ERROR: "Something went wrong. Please try again.",

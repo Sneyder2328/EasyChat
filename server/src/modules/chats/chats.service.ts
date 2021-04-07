@@ -3,6 +3,7 @@ import { raw } from 'objection';
 import { Chat } from 'src/database/models/Chat';
 import { MessageChat } from 'src/database/models/MessageChat';
 import { User } from 'src/database/models/User';
+import { UserChat } from 'src/database/models/UserChat';
 import { UserNotFoundError } from 'src/utils/errors/UserNotFoundError';
 import { genUUID } from 'src/utils/utils';
 import { } from "../../database/models/Group";
@@ -37,23 +38,25 @@ export class ChatsService {
 
     //UTILS
     async getChatId(userId: string, recipientId: string) {
-        const recipientUser = User.query().findById(recipientId);
-        if (!recipientUser) throw new UserNotFoundError();
-
         const chatId = await Chat.query().select("id")
             .join('UserChat ON UserChat.chatId = id')
             .where('userId = "' + userId + '"')
             .andWhere('id IN (SELECT chatId from UserChat where userId = "' + recipientId + '")')
 
-        return chatId[0].id;
+        return chatId.length > 0 ? chatId[0].id : null;
     }
 
     async sendMessage({ id, chatId, userId, content }: { id: string, chatId: string, userId: string, content: string }) {
-        if (!chatId) {
-            chatId = genUUID();
-            await Chat.query().insert({ id: chatId, blocked: false });
-        }
         const message = await MessageChat.query().insert({ recipientId: chatId, id, senderId: userId, content });
         return message;
+    }
+
+    async createChat({ userId, recipientId, chatId }) {
+        if (userId === recipientId) return null;
+        const chatExists = await Chat.query().findById(chatId);
+        if (chatExists) return chatExists.id;
+        const chat = await Chat.query().insert({ id: chatId, blocked: false });
+        await Promise.all([userId, recipientId].map(async userId => await UserChat.query().insert({ userId, chatId })))
+        return chat.id;
     }
 }
