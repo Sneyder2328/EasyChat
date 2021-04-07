@@ -24,7 +24,7 @@ export const HomeScreen = ({ navigation }) => {
     const dispatch = useDispatch()
     const [menuVisible, setMenuVisible] = useState(false)
     const handleSearch = () => {
-        console.log("handleSearch");
+        navigation.navigate(AppScreens.SEARCH)
     }
     const openMenu = () => setMenuVisible(true)
     const closeMenu = () => setMenuVisible(false)

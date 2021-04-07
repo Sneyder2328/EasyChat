@@ -3,10 +3,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import persistReducer from "redux-persist/es/persistReducer";
 import { HashTable, HashTableArray } from "../../utils/utils";
 import { logOutSuccess } from "../auth/authReducer";
+import { GroupObject } from "../group/groupReducer";
+import { SearchResponse } from "./usersApi";
 
 export interface UserObject {
     id: string;
-    photoUrl?: string;
+    photoURL?: string;
     bio?: string;
     fullname: string;
     username: string;
@@ -21,13 +23,21 @@ interface UserState {
         allMessagesLoaded: boolean;
         lastMessageId: string;
     }>;
-    searchResults: HashTableArray<{ userId: string; isGlobal: boolean }>;
+    isSearching: boolean;
+    searchResults: {
+        chats: HashTableArray<{ userId: string }>;
+        global: HashTableArray<{ userId: string }>;
+    }
 }
 
 const initialState: UserState = {
     entities: {},
     mesages: {},
-    searchResults: {}
+    searchResults: {
+        chats: {},
+        global: {}
+    },
+    isSearching: false
 };
 
 export const userSlice = createSlice({
@@ -42,6 +52,25 @@ export const userSlice = createSlice({
         },
         setUser: (state, action: PayloadAction<{ user: UserObject }>) => {
             state.entities[action.payload.user.id] = action.payload.user
+        },
+        searchUsersRequest: (state) => {
+            state.isSearching = true
+        },
+        searchUsersSuccess: (state, action: PayloadAction<{
+            query: string;
+            chats: Array<string>;
+            global: Array<string>;
+            groups: Array<string>;
+        }>) => {
+            const { query, chats, global } = action.payload
+            state.isSearching = false
+            state.searchResults[query] = {
+                chats: chats.map((userId) => ({ userId })),
+                global: global.map((userId) => ({ userId }))
+            }
+        },
+        searchUsersError: (state) => {
+            state.isSearching = false
         }
     },
     extraReducers: builder => {
@@ -55,4 +84,4 @@ const persistConfig = {
 };
 
 export const userReducer = persistReducer(persistConfig, userSlice.reducer)
-export const {setUser,setUsers} = userSlice.actions
+export const { setUser, setUsers, searchUsersError, searchUsersRequest, searchUsersSuccess } = userSlice.actions

@@ -6,6 +6,7 @@ import { isAuthSelector } from "./modules/selectors";
 import { CreateGroupScreen } from "./screens/createGroup/CreateGroupScreen";
 import { HomeScreen } from "./screens/home/HomeScreen";
 import { LogInScreen } from "./screens/logIn/LogInScreen";
+import { SearchScreen } from "./screens/search/SearchScreen";
 import { SignUpScreen } from "./screens/signUp/SignUpScreen";
 import { WelcomeScreen } from "./screens/welcome/WelcomeScreen";
 
@@ -18,6 +19,7 @@ export const AppScreens = {
     HOME: "Home",
     WELCOME: "Welcome",
     CREATE_GROUP: "CreateGroup",
+    SEARCH: "Search",
 }
 
 export const AppNavigator = () => {
@@ -34,6 +36,11 @@ export const AppNavigator = () => {
                 <Stack.Screen
                     name={AppScreens.CREATE_GROUP}
                     component={CreateGroupScreen}
+                    options={{ header: () => null }}
+                />
+                <Stack.Screen
+                    name={AppScreens.SEARCH}
+                    component={SearchScreen}
                     options={{ header: () => null }}
                 />
             </Stack.Navigator>) : (
