@@ -7,7 +7,7 @@ export class UserGroup extends Model {
     createdAt!: Date;
 
     static tableName = "UserGroup";
-};
+}
 
 export type UserGroupObject = ModelObject<UserGroup>;
 export type UserGroupType = {

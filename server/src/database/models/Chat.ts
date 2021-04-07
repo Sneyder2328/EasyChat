@@ -6,7 +6,7 @@ export class Chat extends Model {
     createdAt!: Date;
 
     static tableName = "Chat";
-};
+}
 
 export type ChatObject = ModelObject<Chat>;
 export type ChatType = {

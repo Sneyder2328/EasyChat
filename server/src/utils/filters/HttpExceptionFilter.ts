@@ -1,5 +1,4 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
-import { errors } from '../constants/errors';
 import { httpCodes } from '../constants/httpResponseCodes';
 
 type exceptionType = {
@@ -11,7 +10,6 @@ type exceptionType = {
 export class HttpExceptionFilter implements ExceptionFilter {
     catch(exception: HttpException, host: ArgumentsHost) {
         const context = host.switchToHttp();
-        const req = context.getRequest();
         const res = context.getResponse();
         let error = exception.name;
         let response = exception.getResponse();

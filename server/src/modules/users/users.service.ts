@@ -4,7 +4,6 @@ import { UserType, User } from "../../database/models/User";
 import { ConflictError } from "../../utils/errors/ConflictError";
 import _ from 'lodash';
 import { UserNotFoundError } from 'src/utils/errors/UserNotFoundError';
-import { Chat } from 'src/database/models/Chat';
 import { raw } from 'objection';
 import { Group } from 'src/database/models/Group';
 import { genUUID } from 'src/utils/utils';
@@ -85,7 +84,6 @@ export class UsersService {
                 .whereNotIn("id", knownGroupsId)
                 .andWhere(raw('Group.name LIKE "%' + query + '%"'))
                 .limit(limitCounter).distinct();
-            limitCounter -= globalGroups.length;
             groups = groups.concat(globalGroups.map(group => ({ ...group, isGlobal: true })));
         }
 

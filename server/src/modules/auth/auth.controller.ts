@@ -3,7 +3,6 @@ import { ForbiddenError } from 'src/utils/errors/ForbiddenError';
 import { Response as Res } from 'express'
 import { config } from '../../config/config';
 import { AuthService } from "./auth.service";
-import { errors } from 'src/utils/constants/errors';
 import { Authenticator } from 'src/middlewares/authenticate';
 @Controller('sessions')
 export class AuthController {

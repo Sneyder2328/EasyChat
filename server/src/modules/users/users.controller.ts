@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Response, Post, Put, Query, Request, UseGuards, ValidationPipe } from '@nestjs/common';
 import { Authenticator } from 'src/middlewares/authenticate';
 import { UsersService } from './users.service';
-import { CreateUserDTO, GetUsersDTO, UpdateUserDTO } from "./user.validator";
+import { CreateUserDTO, UpdateUserDTO } from "./user.validator";
 import { Response as Res } from "express"
 import { config } from 'src/config/config';
 @Controller('users')

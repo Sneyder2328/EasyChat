@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { raw } from 'objection';
+import { Chat } from 'src/database/models/Chat';
 import { MessageChat } from 'src/database/models/MessageChat';
 import { User } from 'src/database/models/User';
+import { UserNotFoundError } from 'src/utils/errors/UserNotFoundError';
+import { genUUID } from 'src/utils/utils';
 import { } from "../../database/models/Group";
 @Injectable()
 export class ChatsService {
@@ -30,5 +33,27 @@ export class ChatsService {
         })
         const chatsWithMessage = await Promise.all(chatsMap);
         return { data: chatsWithMessage };
+    }
+
+    //UTILS
+    async getChatId(userId: string, recipientId: string) {
+        const recipientUser = User.query().findById(recipientId);
+        if (!recipientUser) throw new UserNotFoundError();
+
+        const chatId = await Chat.query().select("id")
+            .join('UserChat ON UserChat.chatId = id')
+            .where('userId = "' + userId + '"')
+            .andWhere('id IN (SELECT chatId from UserChat where userId = "' + recipientId + '")')
+
+        return chatId[0].id;
+    }
+
+    async sendMessage({ id, chatId, userId, content }: { id: string, chatId: string, userId: string, content: string }) {
+        if (!chatId) {
+            chatId = genUUID();
+            await Chat.query().insert({ id: chatId, blocked: false });
+        }
+        const message = await MessageChat.query().insert({ recipientId: chatId, id, senderId: userId, content });
+        return message;
     }
 }

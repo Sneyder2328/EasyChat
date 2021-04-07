@@ -7,7 +7,7 @@ import { CreateGroupsDTO } from './groups.validator';
 @UseGuards(Authenticator)
 @Controller('groups')
 export class GroupsController {
-    constructor(private readonly groupsService: GroupsService) { };
+    constructor(private readonly groupsService: GroupsService) { }
 
     @Get()
     async getGroups(

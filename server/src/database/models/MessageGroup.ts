@@ -7,7 +7,7 @@ export class MessageGroup extends Model {
     content!: string;
 
     static tableName = "MessageChat";
-};
+}
 
 export type MessageGroupObject = ModelObject<MessageGroup>;
 export type MessageGroupType = {
