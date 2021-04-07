@@ -51,6 +51,12 @@ export class ChatsService {
         return message;
     }
 
+    async getMessages(chatId: string) {
+        const messages = await MessageChat.query().select("id", "content", "senderId", "recipientId")
+            .where(raw('recipientId = "' + chatId + '"'));
+        return { data: messages };
+    }
+
     async createChat({ userId, recipientId, chatId }) {
         if (userId === recipientId) return null;
         const chatExists = await Chat.query().findById(chatId);

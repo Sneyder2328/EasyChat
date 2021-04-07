@@ -1,4 +1,4 @@
-import { Controller, Get, ParseIntPipe, Query, UseGuards, Request, Post, Body, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, ParseIntPipe, Query, UseGuards, Request, Post, Body, ValidationPipe, Param } from '@nestjs/common';
 import { Authenticator } from 'src/middlewares/authenticate';
 import { BadRequestError } from 'src/utils/errors/BadRequestError';
 import { GroupsService } from "./groups.service";
@@ -27,6 +27,14 @@ export class GroupsController {
     ) {
         const { data } = await this.groupsService.createGroups({ id, name, members, photoURL, bio }, req.userId);
         return { ...data };
+    }
+
+    @Get("/:userId/messages")
+    async getMessages(
+        @Param('groupId') groupId: string
+    ) {
+        const { data } = await this.groupsService.getMessages(groupId);
+        return data;
     }
 }
 function POST() {

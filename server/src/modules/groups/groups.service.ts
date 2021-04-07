@@ -51,6 +51,12 @@ export class GroupsService {
         return message;
     }
 
+    async getMessages(groupId: string) {
+        const messages = await MessageGroup.query().select("id", "content", "senderId", "recipientId")
+            .where(raw('recipientId = "' + groupId + '"'));
+        return { data: messages };
+    }
+
     async createGroups({ id, name, members, photoURL, bio }: createGroupsType, userId: string) {
         const groupExists = await Group.query().findOne('name', name);
         if (groupExists) throw new ConflictError({ error: errors.GROUP, msg: errors.message.NAME_TAKEN })

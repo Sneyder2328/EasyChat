@@ -1,4 +1,4 @@
-import { Controller, Get, ParseIntPipe, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, ParseIntPipe, Query, UseGuards, Request, Param } from '@nestjs/common';
 import { ChatsService } from './chats.service';
 import { Authenticator } from "../../middlewares/authenticate";
 import { BadRequestError } from 'src/utils/errors/BadRequestError';
@@ -16,6 +16,14 @@ export class ChatsController {
     ) {
         if (!limit) throw new BadRequestError();
         const { data } = await this.chatsService.getChats({ limit, date }, req.userId);
+        return data;
+    }
+
+    @Get(":chatId/messages")
+    async getMessages(
+        @Param('groupId') groupId: string
+    ) {
+        const { data } = await this.chatsService.getMessages(groupId);
         return data;
     }
 }
